@@ -69,24 +69,24 @@ final class ViewController: UIViewController {
 
 extension ViewController: ViewControllerScrollableDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset.y
+        // Increase the offset by adding the header's and segment view's height
+        let offset = scrollView.contentOffset.y + headerView.bounds.height + segmentView.frame.height
         
+        // Prepare the matrices
         var headerViewTransform = CATransform3DIdentity
         var segmentTransform = CATransform3DIdentity
         
-        // PULL DOWN
+        // PULL UP OR DOWN
         
         if offset > 0 {
+            // Upon scrolling, change its position
             headerViewTransform = CATransform3DTranslate(headerViewTransform, 0, max(-offset_HeaderViewStop, -offset), 0)
             
-            // Scroll the segment view until its offset reaches the same offset at which the header stopped shrinking
+            // Upon scrolling, change its position
             segmentTransform = CATransform3DTranslate(segmentTransform, 0, max(-offset_HeaderViewStop, -offset), 0)
-            segmentView.layer.transform = segmentTransform
         }
         
-        print("Offset: \(-offset)")
-        print("Segment View: \(segmentView.frame.origin.y)")
-        
         headerView.layer.transform = headerViewTransform
+        segmentView.layer.transform = segmentTransform
     }
 }
